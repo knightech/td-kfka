@@ -1,0 +1,37 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.sky.csc'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+	compile 'org.projectlombok:lombok:1.18.2'
+	
+	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+	testCompile 'org.objenesis:objenesis:2.5.1'
+	testCompile 'cglib:cglib-nodep:3.2.4'
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
