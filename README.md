@@ -1,6 +1,6 @@
 # Title Discovery
 
-## This service provides a stub for the title discovery service supplying stubbed response for the following genres
+## This service provides a stub for the title discovery service supplying mocked responses for the following genres:-
 
 ### Action 
 
