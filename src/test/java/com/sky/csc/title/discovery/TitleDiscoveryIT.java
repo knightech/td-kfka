@@ -133,7 +133,7 @@ public class TitleDiscoveryIT {
 
         Properties brokerProperties = new Properties();
         brokerProperties.setProperty("port", "9092");
-        brokerProperties.setProperty("log.cleanup.policy","compact");
+        brokerProperties.setProperty("cleanup.policy","compact");
 
         kafkaTestCluster = new KafkaTestCluster(clusterSize, brokerProperties);
         kafkaTestCluster.start();
