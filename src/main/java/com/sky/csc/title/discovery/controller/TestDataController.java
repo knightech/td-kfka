@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.UncheckedIOException;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.IntStream;
@@ -56,6 +60,20 @@ public class TestDataController {
 
         return HttpStatus.OK;
 
+    }
+
+    public static void main(String[] args) {
+
+
+
+        System.out.println(getRandomDate());
+
+    }
+
+    private static String getRandomDate(){
+        String dateTime = "MM/dd/yyyy HH:mm:ss";
+        String format = LocalDateTime.now().minusDays(random.nextInt(90)).format(DateTimeFormatter.ofPattern(dateTime));
+        return LocalDateTime.parse(format, DateTimeFormatter.ofPattern(dateTime)).atZone(ZoneOffset.UTC).toString();
     }
 
     private void produce(String bootstrapServers, int numberOfItems, int numberOfOffers, int numberOfTerms, String genre){
@@ -195,8 +213,8 @@ public class TestDataController {
         ObjectNode offer = objectMapper.createObjectNode();
         offer.put("offerId", UUID.randomUUID().toString());
         offer.put("itemId", itemId);
-        offer.put("startDate", ZonedDateTime.now().minusDays(random.nextInt(90)).toString());
-        offer.put("endDate", ZonedDateTime.now().plusDays(random.nextInt(90)).toString());
+        offer.put("startDate", getRandomDate());
+        offer.put("endDate", getRandomDate());
         offer.put("alias", "offer");
 
         byte[] offerAsJson = new byte[0];
