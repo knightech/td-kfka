@@ -152,7 +152,7 @@ public class TitleDiscoveryIT {
     public void getItemsByGenreActionReturnsListOfGenres() throws IOException, InterruptedException {
 
         ResponseEntity<String> populate = restTemplate.getForEntity(
-                "http://localhost:8080/title-discovery/load?items=5&offers=2&terms=2",
+                "http://localhost:8080/title-discovery/load?items=5&offers=2&terms=2&genre=Action",
                 String.class);
 
         assertThat(populate.getStatusCode()).isEqualTo(HttpStatus.OK);
