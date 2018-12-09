@@ -5,8 +5,8 @@ spring:
 couchbase.cluster:
   host: localhost:8091
   title-bucket: tds-data
-  username: tds-full
-  password: tds-full
+  username: tds-data
+  password: tds-data
 
 kafka:
   bootstrap-servers: 127.0.0.1:9092

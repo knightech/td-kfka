@@ -46,23 +46,21 @@ public class TestDataController {
 
     @GetMapping("/title-discovery/load")
     public HttpStatus load(
-            @RequestParam(value = "numberOfItems", required = true) String numberOfItems,
-            @RequestParam(value = "numberOfOffers", required = true) String numberOfOffers,
-            @RequestParam(value = "numberOfTerms", required = true) String numberOfTerms){
+            @RequestParam(value = "items") int items,
+            @RequestParam(value = "offers") int offers,
+            @RequestParam(value = "terms") int terms,
+            @RequestParam(value = "genre", required = false) String genre
+            ){
 
-        produce(bootstrapServers, numberOfItems, numberOfOffers, numberOfTerms);
+        produce(bootstrapServers, items, offers, terms, genre);
 
         return HttpStatus.OK;
 
     }
 
-    private void produce(String... inputParameterArray){
+    private void produce(String bootstrapServers, int numberOfItems, int numberOfOffers, int numberOfTerms, String genre){
 
-        try (final Producer<String, byte[]> producer = createProducer(inputParameterArray[0])) {
-
-            int numberOfItems = Integer.parseInt(inputParameterArray[1]);
-            int numberOfOffers = Integer.parseInt(inputParameterArray[2]);
-            int numberOfTerms = Integer.parseInt(inputParameterArray[3]);
+        try (final Producer<String, byte[]> producer = createProducer(bootstrapServers)) {
 
             IntStream.range(0, numberOfItems)
 
@@ -70,7 +68,7 @@ public class TestDataController {
 
                         System.out.println("Number of Items: " + numberOfItems);
 
-                        final String publishItemId = publishItem(producer);
+                        final String publishItemId = publishItem(producer, genre);
 
                         System.out.println("Number of Offers: " + numberOfOffers);
 
@@ -118,16 +116,17 @@ public class TestDataController {
      * Build and publish stub item
      *
      * @param producer the kafka producer
+     * @param suppliedGenre the genre chosen by the user
      * @return the itemId
      * @throws Exception should any error happen during processing
      */
-    private String publishItem(Producer<String, byte[]> producer) {
+    private String publishItem(Producer<String, byte[]> producer, String suppliedGenre) {
 
         ObjectNode item = objectMapper.createObjectNode();
         item.put("itemId", UUID.randomUUID().toString());
         item.put("item-type", itemType.get(random.nextInt(itemType.size())));
         item.put("sub-type", subType.get(random.nextInt(subType.size())));
-        item.put("genre", genre.get(random.nextInt(genre.size())));
+        item.put("genre", Optional.ofNullable(suppliedGenre).orElse(genre.get(random.nextInt(genre.size()))));
 
         item.put("alias", "item");
 

@@ -1,16 +1,37 @@
 package com.sky.csc.title.discovery;
 
+import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.CouchbaseCluster;
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonArray;
+import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
+import com.couchbase.client.java.query.N1qlQuery;
+import com.couchbase.client.java.query.N1qlQueryResult;
+import com.couchbase.mock.BucketConfiguration;
+import com.couchbase.mock.CouchbaseMock;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salesforce.kafka.test.KafkaTestCluster;
+import com.salesforce.kafka.test.KafkaTestUtils;
 import com.sky.csc.title.discovery.service.TitleDiscoveryService;
 import com.sky.csc.title.discovery.util.JsonUtils;
-import io.prometheus.client.CollectorRegistry;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -18,74 +39,184 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.List;
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import static com.couchbase.client.java.query.Select.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = TitleDiscoveryTestConfig.class)
+@SpringBootTest(webEnvironment = DEFINED_PORT)
 public class TitleDiscoveryIT {
 
-    private JsonUtils jsonUtils = new JsonUtils(new ObjectMapper());
+    private static final Logger logger = LoggerFactory.getLogger(TitleDiscoveryIT.class);
+    private ObjectMapper objectMapper = new ObjectMapper();
+    private JsonUtils jsonUtils = new JsonUtils(objectMapper);
+
+    private final static BucketConfiguration bucketConfiguration = new BucketConfiguration();
+    public static final String TDS_DATA = "tds-data";
+    private static CouchbaseMock couchbaseMock;
+    private static int carrierPort;
+    private static int httpPort;
+    private static KafkaTestUtils utils;
+    private static KafkaTestCluster kafkaTestCluster;
+
+    @Autowired
+    TitleDiscoveryService titleDiscoveryService;
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
-    TitleDiscoveryService titleDiscoveryService;
+    private Bucket titleBucket;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @BeforeClass
+    public static void up() throws Exception {
 
-    static {
-        //HACK Avoids duplicate metrics registration in case of Spring Boot dev-tools restarts
-        CollectorRegistry.defaultRegistry.clear();
+        createMock();
+        httpPort = couchbaseMock.getHttpPort();
+        carrierPort = couchbaseMock.getCarrierPort(TDS_DATA);
+        startKafkaService(1);
+
     }
 
-    @Ignore
+    @After
+    public void after() throws Exception {
+
+        if (couchbaseMock != null) {
+            couchbaseMock.stop();
+        }
+
+        kafkaTestCluster.stop();
+
+    }
+
+    @TestConfiguration
+    static class TitleDiscoveryTestConfig {
+
+        @Bean
+        public Cluster couchbaseCluster(){
+            return CouchbaseCluster.create
+                    (DefaultCouchbaseEnvironment.builder()
+                    .bootstrapCarrierDirectPort(carrierPort)
+                    .bootstrapHttpDirectPort(httpPort)
+                    .build(), "couchbase://127.0.0.1")
+                    .authenticate(TDS_DATA, TDS_DATA);
+        }
+
+        @Bean(destroyMethod = "close")
+        public Bucket titleBucket() {
+
+            Bucket bucket = couchbaseCluster().openBucket(TDS_DATA);
+
+           // createIndexes(bucket);
+
+            return bucket;
+        }
+
+        private void createIndexes(Bucket bucket) {
+
+            bucket.query(N1qlQuery.simple(
+                    "CREATE PRIMARY INDEX ON `" + bucket.name() + "`;"
+            ));
+        }
+    }
+
+
+    private static void startKafkaService(final int clusterSize) throws Exception {
+
+        Properties brokerProperties = new Properties();
+        brokerProperties.setProperty("port", "9092");
+        brokerProperties.setProperty("log.cleanup.policy","compact");
+
+        kafkaTestCluster = new KafkaTestCluster(clusterSize, brokerProperties);
+        kafkaTestCluster.start();
+
+        utils = new KafkaTestUtils(kafkaTestCluster);
+
+        utils.createTopic("items", clusterSize, (short) clusterSize);
+        utils.createTopic("offers", clusterSize, (short) clusterSize);
+        utils.createTopic("terms", clusterSize, (short) clusterSize);
+        utils.createTopic("titles", clusterSize, (short) clusterSize);
+
+        logger.info("Cluster started at: {}", kafkaTestCluster.getKafkaConnectString());
+    }
+
     @Test
-    public void getItemsByGenreActionReturnsListOfGenres() throws IOException {
+    public void getItemsByGenreActionReturnsListOfGenres() throws IOException, InterruptedException {
 
-        List<JsonNode> titleList = objectMapper.readValue(
-                jsonUtils.getJsonContent("expected/titles.json").toString(),
-                objectMapper.getTypeFactory().constructCollectionType(
-                        List.class, JsonNode.class));
+        ResponseEntity<String> populate = restTemplate.getForEntity(
+                "http://localhost:8080/title-discovery/load?items=5&offers=2&terms=2",
+                String.class);
 
-        // given
-        given(titleDiscoveryService.getItemByGenre(anyString())).willReturn(titleList);
+        assertThat(populate.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        //act
-        ResponseEntity<List<JsonNode>> itemList = restTemplate.exchange(
-                "/title-discovery/titles?genre=BollyWood",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<JsonNode>>(){});
+        try (final KafkaConsumer<String, String> kafkaConsumer =
+                     utils.getKafkaConsumer(StringDeserializer.class, StringDeserializer.class)) {
 
-        //assert
-        assertThat(itemList.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(itemList.getBody().size()).isEqualTo(3);
+            final List<TopicPartition> topicPartitionList = new ArrayList<>();
+
+            for (final PartitionInfo partitionInfo : kafkaConsumer.partitionsFor("titles")) {
+                topicPartitionList.add(new TopicPartition(partitionInfo.topic(), partitionInfo.partition()));
+            }
+
+            kafkaConsumer.assign(topicPartitionList);
+            kafkaConsumer.seekToBeginning(topicPartitionList);
+
+            ConsumerRecords<String, String> records;
+
+            TimeUnit.SECONDS.sleep(45l);
+
+            Set<String> keys = new HashSet<>();
+
+            do {
+
+                records = kafkaConsumer.poll(Duration.ofSeconds(20L));
+                logger.info("Found {} records in kafka", records.count());
+
+                for (ConsumerRecord<String, String> record : records) {
+
+                    keys.add(record.key());
+
+                    System.out.format("The key: %s and the value: %s%n", record.key(), record.value());
+                    JsonDocument title = JsonDocument.create(record.key(), JsonObject.fromJson(record.value()));
+                    titleBucket.upsert(title);
+
+                }
+            }
+
+            while (!records.isEmpty());
+
+            keys.forEach(s -> System.out.println("\n\nXXXXXXXX "+ titleBucket.get(s) + " XXXXXXX"));
+
+
+        }
+
+
+
 
     }
 
-    @Ignore
-    @Test
-    public void getItemsByNonExistingGenreReturnsEmptyList() {
+    private static void createMock() throws Exception {
 
-        //act
-        ResponseEntity<List<JsonNode>> itemList = restTemplate.exchange(
-                "/title-discovery/titles?genre=Romance",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<JsonNode>>(){});
+        bucketConfiguration.type = com.couchbase.mock.Bucket.BucketType.COUCHBASE;
+        ArrayList<BucketConfiguration> configList = new ArrayList<BucketConfiguration>();
+        bucketConfiguration.numVBuckets = 1024;
+        bucketConfiguration.numReplicas = 1;
+        bucketConfiguration.numNodes = 1;
+        bucketConfiguration.name = TDS_DATA;
+        bucketConfiguration.password = TDS_DATA;
 
-        //assert
-        assertThat(itemList.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(itemList.getBody()).isEmpty();
+        configList.add(bucketConfiguration);
 
+        couchbaseMock = new CouchbaseMock(8091, configList);
+        couchbaseMock.start();
+        couchbaseMock.waitForStartup();
     }
-
-
 }
