@@ -1,0 +1,19 @@
+{
+  "offerId": "5678",
+  "itemId": "90c627bc-6c03-4273-8cba-28e9efaaf0d8",
+  "startDate": "2018-09-09T10:52:27.39401:00[Europe/London]",
+  "endDate": "2018-11-25T10:52:27.394Z[Europe/London]",
+  "alias": "offer",
+  "terms": [
+    {
+      "termId": "1111",
+      "offerId": "5678",
+      "alias": "term"
+    },
+    {
+      "termId": "2222",
+      "offerId": "5678",
+      "alias": "term"
+    }
+  ]
+}

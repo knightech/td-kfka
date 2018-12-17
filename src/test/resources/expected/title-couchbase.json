@@ -1,0 +1,49 @@
+{
+  "title": {
+    "offers": [
+      {
+        "itemId": "021635ff-5d54-418d-97cc-67408fad3d38",
+        "offerId": "846324bf-a3a3-4d6b-9d57-2d449d945b66",
+        "alias": "offer",
+        "endDate": "2019-01-25T12:32:15.991Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "79105d15-157d-40f6-ad79-025b320f63b1",
+            "offerId": "846324bf-a3a3-4d6b-9d57-2d449d945b66",
+            "alias": "term"
+          },
+          {
+            "termId": "0297454d-fa22-4f2f-a139-c123e11fa9ef",
+            "offerId": "846324bf-a3a3-4d6b-9d57-2d449d945b66",
+            "alias": "term"
+          }
+        ],
+        "startDate": "2018-10-04T12:32:15.991Z[Etc/UTC]"
+      },
+      {
+        "itemId": "021635ff-5d54-418d-97cc-67408fad3d38",
+        "offerId": "ab95945a-586c-4b5f-8a2b-29cdd1c38c2a",
+        "alias": "offer",
+        "endDate": "2019-01-07T12:32:15.996Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "f0504bed-b53a-41db-969c-7cb43879d70b",
+            "offerId": "ab95945a-586c-4b5f-8a2b-29cdd1c38c2a",
+            "alias": "term"
+          },
+          {
+            "termId": "b2a6d8d6-fa5a-4b30-86e1-5beb064da5e9",
+            "offerId": "ab95945a-586c-4b5f-8a2b-29cdd1c38c2a",
+            "alias": "term"
+          }
+        ],
+        "startDate": "2018-11-27T12:32:15.996Z[Etc/UTC]"
+      }
+    ],
+    "genre": "BollyWood",
+    "itemId": "021635ff-5d54-418d-97cc-67408fad3d38",
+    "alias": "item",
+    "item-type": "Kids",
+    "sub-type": "Historical"
+  }
+}

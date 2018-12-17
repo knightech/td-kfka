@@ -1,0 +1,143 @@
+[
+  {
+    "genre": "Comedy",
+    "itemId": "09ecfa56-7902-4dfb-82b1-cd24cf4a17ed",
+    "alias": "item",
+    "item-type": "Programme",
+    "sub-type": "Special",
+    "offers": [
+      {
+        "itemId": "09ecfa56-7902-4dfb-82b1-cd24cf4a17ed",
+        "offerId": "9c6215e4-e70d-4365-a3cc-595177d41b1e",
+        "alias": "offer",
+        "startDate": "2018-09-14T11:57:50.266Z[Etc/UTC]",
+        "endDate": "2018-12-26T11:57:50.266Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "4cacd3a1-04a7-462e-9270-21289dc9ecbc",
+            "offerId": "9c6215e4-e70d-4365-a3cc-595177d41b1e",
+            "alias": "term"
+          },
+          {
+            "termId": "4f5c3e63-928b-4202-8eaf-cf37c55eda0f",
+            "offerId": "9c6215e4-e70d-4365-a3cc-595177d41b1e",
+            "alias": "term"
+          }
+        ]
+      },
+      {
+        "itemId": "09ecfa56-7902-4dfb-82b1-cd24cf4a17ed",
+        "offerId": "348ea184-d1fc-4b29-9cd2-89ce82f66088",
+        "alias": "offer",
+        "startDate": "2018-11-11T11:57:50.270Z[Etc/UTC]",
+        "endDate": "2018-12-14T11:57:50.270Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "b9141b06-9b4a-4168-a354-0cc3a50d1fa9",
+            "offerId": "348ea184-d1fc-4b29-9cd2-89ce82f66088",
+            "alias": "term"
+          },
+          {
+            "termId": "bcf2fdbf-4d67-4a4a-9e1d-220c1bce205c",
+            "offerId": "348ea184-d1fc-4b29-9cd2-89ce82f66088",
+            "alias": "term"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "genre": "BollyWood",
+    "itemId": "ff8d4016-bc9a-49e6-906e-279959800987",
+    "alias": "item",
+    "item-type": "Game Show",
+    "sub-type": "Technology",
+    "offers": [
+      {
+        "itemId": "ff8d4016-bc9a-49e6-906e-279959800987",
+        "offerId": "006bd829-8154-4acd-bfd4-b81f42f4feda",
+        "alias": "offer",
+        "startDate": "2018-10-08T11:57:50.242Z[Etc/UTC]",
+        "endDate": "2019-01-05T11:57:50.242Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "216404b0-ec50-45d7-bb23-669484595e34",
+            "offerId": "006bd829-8154-4acd-bfd4-b81f42f4feda",
+            "alias": "term"
+          },
+          {
+            "termId": "ede52c6b-e4bc-4e00-b12f-5cd1f9c3ef26",
+            "offerId": "006bd829-8154-4acd-bfd4-b81f42f4feda",
+            "alias": "term"
+          }
+        ]
+      },
+      {
+        "itemId": "ff8d4016-bc9a-49e6-906e-279959800987",
+        "offerId": "00f50af8-09f2-49cd-889d-3b3c0c418e3f",
+        "alias": "offer",
+        "startDate": "2018-10-05T11:57:50.246Z[Etc/UTC]",
+        "endDate": "2019-02-01T11:57:50.246Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "6f85d7bd-4563-4b3b-92fa-8680d72e6e11",
+            "offerId": "00f50af8-09f2-49cd-889d-3b3c0c418e3f",
+            "alias": "term"
+          },
+          {
+            "termId": "baa38244-66b2-4c93-8e4b-71a3a9f45edb",
+            "offerId": "00f50af8-09f2-49cd-889d-3b3c0c418e3f",
+            "alias": "term"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "genre": "Action",
+    "itemId": "f70ff057-a3f2-41d6-b04e-9a96b014ce51",
+    "alias": "item",
+    "item-type": "Series",
+    "sub-type": "Special",
+    "offers": [
+      {
+        "itemId": "f70ff057-a3f2-41d6-b04e-9a96b014ce51",
+        "offerId": "059962d8-3464-46a7-abc8-62914820c738",
+        "alias": "offer",
+        "startDate": "2018-12-03T12:25:06.580Z[Etc/UTC]",
+        "endDate": "2019-01-29T12:25:06.581Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "24f9425a-1621-43f9-b120-e560e8219cb8",
+            "offerId": "059962d8-3464-46a7-abc8-62914820c738",
+            "alias": "term"
+          },
+          {
+            "termId": "32536382-c32b-431f-bde2-7e9b3561cdb7",
+            "offerId": "059962d8-3464-46a7-abc8-62914820c738",
+            "alias": "term"
+          }
+        ]
+      },
+      {
+        "itemId": "f70ff057-a3f2-41d6-b04e-9a96b014ce51",
+        "offerId": "1d439a7d-50ac-4b77-9ade-495694ea6838",
+        "alias": "offer",
+        "startDate": "2018-09-08T12:25:06.586Z[Etc/UTC]",
+        "endDate": "2019-02-02T12:25:06.586Z[Etc/UTC]",
+        "terms": [
+          {
+            "termId": "d79ac888-4f76-41fd-87b0-a7eadf6e9522",
+            "offerId": "1d439a7d-50ac-4b77-9ade-495694ea6838",
+            "alias": "term"
+          },
+          {
+            "termId": "cd8f82eb-0d3e-4f73-957f-00d7264cb9e3",
+            "offerId": "1d439a7d-50ac-4b77-9ade-495694ea6838",
+            "alias": "term"
+          }
+        ]
+      }
+    ]
+  }
+]
