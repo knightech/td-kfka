@@ -49,7 +49,7 @@ public class DockerComposeIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(DockerComposeIntegrationTest.class);
     private static final String TITLE_BUCKET_BEAN_NAME = "titleBucket";
-    private static final String TITLE_TOPOLOGY_BEAN_NAME = "titleTopology";
+    private static final String TITLE_TOPOLOGY_BEAN_NAME = "myTopology";
 
     @Autowired
     private TestRestTemplate restTemplate;
