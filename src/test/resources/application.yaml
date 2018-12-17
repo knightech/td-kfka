@@ -1,7 +1,9 @@
 spring:
   application:
     name: title-discovery-api
-
+api:
+  version: 1.0
+  
 couchbase.cluster:
   host: localhost:8091
   title-bucket: tds-data

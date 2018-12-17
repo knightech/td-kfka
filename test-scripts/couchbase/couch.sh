@@ -31,5 +31,5 @@ echo '##########################'
 
 /opt/couchbase/bin/couchbase-cli user-manage -c localhost:8091 -u tds-owner  -p tds-owner \
  --set --rbac-username tds-full --rbac-password tds-full \
- --rbac-name "tds-full" --roles data_reader[tds-data],data_writer[tds-data],query_manage_index[tds-data],query_select[tds-data] \
+ --rbac-name "tds-full" --roles data_reader[tds-data],data_writer[tds-data],query_manage_index[tds-data],query_select[tds-data],query_delete[tds-data] \
  --auth-domain local
