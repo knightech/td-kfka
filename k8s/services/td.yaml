@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: title-discovery-api
+  namespace: td
+  labels:
+    app: title-discovery-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: title-discovery-api
+  template:
+    metadata:
+      labels:
+        app: title-discovery-api
+    spec:
+      containers:
+      - name: title-discovery-api
+        image: tda
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: title-discovery-api
+  namespace: td
+  labels:
+    app: title-discovery-api
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    nodePort: 30036
+  selector:
+    app: title-discovery-api
+  type: NodePort
+
+# http://localhost:30036/title-discovery/titles?genre=Action
