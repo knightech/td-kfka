@@ -28,7 +28,7 @@ public class Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.csc.title.discovery.controller"))
+                .apis(RequestHandlerSelectors.basePackage("net.knightech.kfka.controller"))
                 .build()
                 .apiInfo(apiInfo());
     }
