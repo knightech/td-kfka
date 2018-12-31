@@ -15,7 +15,6 @@
 <logger name="org.springframework" level="INFO"/>
 <logger name="org.apache.kafka" level="INFO"/>
 <logger name="com.couchbase.client" level="INFO"/>
-<logger name="com.sky.csc.title.discovery" level="INFO"/>
 
 
 
