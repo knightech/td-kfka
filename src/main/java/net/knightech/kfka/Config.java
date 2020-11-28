@@ -34,16 +34,6 @@ public class Config {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo(
-                "CSC Title Discovery API",
-                "API specifications for the Title Discovery service in Sky's new Content Supply Chain\n" +
-                        "    More details on the Title Discovery architecture can be found " +
-                        "[here](https://github.com/sky-uk/csp-title-discovery-api/blob/master/README.md)",
-                "version: 0.1.2",
-                "Terms of service",
-                new Contact("CSC - Planning and Scheduling Tide Team",
-                        "https://github.com/sky-uk/csp-title-discovery-api",
-                        "@sky-uk/tide-guys"),
-                        "License of API", "API license URL", Collections.emptyList());
+        return null;
     }
 }
